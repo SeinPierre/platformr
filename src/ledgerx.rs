@@ -1,8 +1,17 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Contract {
+
+macro_rules! pub_struct {
+    ($name:ident {$($field:ident: $t:ty,)*}) => {
+        #[derive(Debug, Serialize, Deserialize)] // ewww
+        pub struct $name {
+            $(pub $field: $t),*
+        }
+    }
+}
+
+pub_struct!(Contract {
     id: i32,
     label: String,
     name: Option<String>,
@@ -20,7 +29,7 @@ pub struct Contract {
     is_next_day: bool,
     multiplier: i32,
     _type: String,
-}
+});
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Meta {
@@ -61,3 +70,8 @@ pub async fn get_contracts() -> Option<Answer> {
     serde_json::from_str(&t).ok()?
 
 }
+
+//Websocket connection
+// https://docs.ledgerx.com/reference/connecting
+//https://users.rust-lang.org/t/saving-data-from-tungstenite-websocket-client/63618
+
