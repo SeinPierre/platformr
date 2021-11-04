@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let contracts_vec : Vec<&str> = contract_name.split("-").collect();
         let name = contracts_vec[0];
         if prices_map.contains_key(contracts_vec[0]){
-            println!("{}\t{}\tunderlying: {}\tstrike: {},",name,contracts_vec[contracts_vec.len()-3],prices_map[contracts_vec[0]],contract.strike_price);
+            println!("{}\t{}\tUnderlying: {}\tstrike: {},",name,contracts_vec[contracts_vec.len()-3],prices_map[contracts_vec[0]],contract.strike_price);
         };
 
     }
