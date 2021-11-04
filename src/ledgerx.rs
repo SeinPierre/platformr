@@ -4,7 +4,7 @@ use serde_json;
 
 macro_rules! pub_struct {
     ($name:ident {$($field:ident: $t:ty,)*}) => {
-        #[derive(Debug, Serialize, Deserialize)] // ewww
+        #[derive(Debug, Serialize, Deserialize, Clone)] // ewww
         pub struct $name {
             $(pub $field: $t),*
         }
@@ -40,8 +40,6 @@ pub struct Meta {
     offset: i32,
 }
 
-
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Answer {
     pub data: Vec<Contract>,
@@ -63,15 +61,12 @@ pub async fn get_contracts() -> Option<Answer> {
         .replace("type","_type")
         .replace("derivative__type","derivative_type");
 
-    // let y: String = t.chars().skip(69088).take(20).collect();
-
-    // println!("{}", y);
 
     serde_json::from_str(&t).ok()?
 
 }
 
-//Websocket connection
+// Websocket connection
 // https://docs.ledgerx.com/reference/connecting
-//https://users.rust-lang.org/t/saving-data-from-tungstenite-websocket-client/63618
+// https://users.rust-lang.org/t/saving-data-from-tungstenite-websocket-client/63618
 
