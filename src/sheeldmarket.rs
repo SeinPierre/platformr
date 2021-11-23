@@ -1,4 +1,3 @@
-
 pub async fn get_prices() -> Result<String,reqwest::Error>{
 
     let res = reqwest::Client::new()

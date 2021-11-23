@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
 
-
 macro_rules! pub_struct {
     ($name:ident {$($field:ident: $t:ty,)*}) => {
         #[derive(Debug, Serialize, Deserialize, Clone)] // ewww
