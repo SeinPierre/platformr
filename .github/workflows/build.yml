@@ -1,0 +1,15 @@
+name: "Build"
+
+on:
+  push:
+    branches:
+      -  master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: |
+          cargo build
