@@ -4,10 +4,14 @@ mod sheeldmarket;
 use ledgerx::Contract;
 use futures::executor::block_on;
 use serde_json;
+use std::any::Any;
 use std::collections::HashMap;
 use std::thread;
 use websocket::ClientBuilder;
 use websocket::header::{Headers, Cookie};
+use websocket::WebSocketError;
+
+const ERROR_THRESHOLD: i32 = 200;
 
 fn dispatch(msg: &websocket::OwnedMessage) -> Result<(), Box<dyn std::error::Error>> {
 
@@ -70,24 +74,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .connect(None)
     .unwrap();
 
+    let mut error_counter = 0;
+
     loop {
         let msg = client.recv_message();
         match msg{
             Ok(m)=> {
+                error_counter = 0;
                 let res = dispatch(&m);
                 match res{
                     Ok(_) => continue,
                     Err(_) => println!("Dispatch Error")
                 }
             },
-            Err(_)=> {
-                println!("Error receiving message");
-                break;
+            Err(e) => {
+                error_counter += 1;
+                if (error_counter > ERROR_THRESHOLD )
+                {
+                    panic!("Too many consecutive errors");
+                }
+                match e {
+                    WebSocketError::NoDataAvailable => {
+                        println!("{}",e);
+                        continue;
+                    }
+                    _  => {
+                        println!("{}",e);
+                        break;
+                    }
+                }
             }
         }
-        
     }
-
     Ok(())
 }
 
